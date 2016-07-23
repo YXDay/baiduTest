@@ -8,6 +8,7 @@
 
   <!-- Bootstrap -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/flat/red.css" rel="stylesheet">
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -41,9 +42,27 @@
           border: none;
           background-color: white;
         }
-        .page-sec-row > input[type="checkbox"] {
-          position: relative;
-          top: 12px;
+        .icheckbox_flat-red {
+          float: right !important;
+          top: 18px;
+        }
+        .page-sec-row-arrow{
+          float: right !important;
+          top: 18px;
+          color: rgb(235,235,235);
+        }
+        .page-btn {
+          width: 80% !important;
+          margin-left: 10%;
+        }
+        #myModal .page-row{
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+          margin: 0;
+        }
+        .page-sec-row-tick {
+          
         }
       </style>
     </head>
@@ -72,11 +91,29 @@
             是否打折
             <input type="checkbox" class="pull-right">
           </div>
-          <div class="page-sec-row">
+          <div class="page-sec-row" data-toggle="modal" data-target="#myModal">
             行业类型
             <input type="text" name="merchant-tel" placeholder="请选择" disabled="disabled"/>
+            <span class="page-sec-row-arrow pull-right glyphicon glyphicon-menu-right"></span>
           </div>
         </div>
+
+        <input class="btn btn-danger btn-lg btn-block page-btn" type="submit" value="提交">
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="page-row">
+            <div class="page-sec-row" data-dismiss="modal">
+              取消
+            </div>
+            <div class="page-sec-row">
+              餐饮
+              <span class="page-sec-row-tick pull-right glyphicon glyphicon-ok"></span>
+            </div>
+          </div>
+        </div>
+
+
       </form>
 
       <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -84,5 +121,14 @@
       <!-- Include all compiled plugins (below), or include individual files as needed -->
       <script src="js/bootstrap.min.js"></script>
       <script src="js/vue.js"></script>
+      <script src="js/icheck.min.js"></script>
+
+      <script>
+        $(document).ready(function(){
+          $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-red',
+          });
+        });
+      </script>
     </body>
     </html>
