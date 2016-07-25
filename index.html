@@ -62,27 +62,31 @@
           margin: 0;
         }
         .page-sec-row-tick {
-          
+          display: none;
+          float: right !important;
+          top: 18px;
+          color: rgb(232,80,81);
         }
       </style>
     </head>
     <body>
-      <form>
+      <validator name="validation1">
+      <form novalidate>
         <div class="page-row">
           <div class="page-sec-row">
             商家名称
-            <input type="text" name="merchant-name" placeholder="请输入名称" />
+            <input id="merchant-name" type="text" name="merchant-name" placeholder="请输入名称" v-validate:merchant-name="{required:true,maxlength:20}"/>
           </div>
           <div class="page-sec-row">
             商家电话
-            <input type="text" name="merchant-tel" placeholder="请输入电话" />
+            <input id="marchant-tel" type="text" name="merchant-tel" placeholder="请输入电话" v-validate:merchant-tel="{required:true,minlength:11,maxlength:11}"/>
           </div>
         </div>
 
         <div class="page-row">
           <div class="page-sec-row">
             团购价&nbsp&nbsp&nbsp
-            <input type="text" name="merchant-name" placeholder="不可点击的" disabled="disabled"/>
+            <input id="price" type="text" name="merchant-name" placeholder="不可点击的" readonly="readonly" v-validate:price="{required:true,min:10,max:100}" value="99" />
           </div>
         </div>
 
@@ -93,28 +97,27 @@
           </div>
           <div class="page-sec-row" data-toggle="modal" data-target="#myModal">
             行业类型
-            <input type="text" name="merchant-tel" placeholder="请选择" disabled="disabled"/>
+            <input type="text" name="merchant-tel" placeholder="请选择" readonly="readonly" v-model="message" v-validate:message="{required:true}"/>
             <span class="page-sec-row-arrow pull-right glyphicon glyphicon-menu-right"></span>
           </div>
         </div>
 
-        <input class="btn btn-danger btn-lg btn-block page-btn" type="submit" value="提交">
+        <input class="btn btn-danger btn-lg btn-block page-btn" type="submit" value="提交" v-if="$validation1.valid">
 
         <!-- Modal -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-          <div class="page-row">
+          <div id="test" class="page-row">
             <div class="page-sec-row" data-dismiss="modal">
               取消
             </div>
-            <div class="page-sec-row">
-              餐饮
+            <div class="page-sec-row choose-list" v-for="item in items" v-on:click="choose" data-dismiss="modal">
+              {{ item.message }}
               <span class="page-sec-row-tick pull-right glyphicon glyphicon-ok"></span>
             </div>
           </div>
         </div>
-
-
       </form>
+      </validator>
 
       <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
       <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
@@ -122,12 +125,46 @@
       <script src="js/bootstrap.min.js"></script>
       <script src="js/vue.js"></script>
       <script src="js/icheck.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/vue.validator/2.1.5/vue-validator.min.js"></script>
 
       <script>
         $(document).ready(function(){
+          var checkbox = $("input[type='checkbox']");
           $('input').iCheck({
             checkboxClass: 'icheckbox_flat-red',
           });
+          $("ins.iCheck-helper").click(function(){
+            alert(666)
+            if (checkbox.attr("checked") == "checked"){checkbox.attr("checked","")}
+            else{checkbox.attr("checked","checked")}
+              alert(666)
+          });
+
+          new Vue({
+            el:"body",
+            data: {
+              items: [
+                {message : "餐饮"},
+                {message : "美甲"},
+                {message : "旅游"},
+                {message : "快递"},
+                {message : "亲子"},
+              ],
+              message: ""
+            },
+            methods: {
+              choose: function(event) {
+                  $(".choose-list").each(function(){
+                    $(this).css("color","#333")
+                    $(this).children("span").hide();
+                  });
+                  var e = event.target;
+                  this.message = e.childNodes[1].nodeValue;
+                  e.style.color = "red";
+                  e.childNodes[3].style.display = "inline-block";
+              }
+            }
+          })
         });
       </script>
     </body>
