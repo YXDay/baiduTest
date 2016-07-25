@@ -73,11 +73,11 @@
           <div class="page-row">
             <div class="page-sec-row">
               商家名称
-              <input id="merchant-name" type="text" name="merchantName" placeholder="请输入名称" v-validate:merchant-name="{required:true,maxlength:20}" v-model="merchantName"/>
+              <input id="merchantName" type="text" name="merchantName" placeholder="请输入名称" v-validate:merchantName="{required:true,maxlength:20}" v-model="merchantName"/>
             </div>
             <div class="page-sec-row">
               商家电话
-              <input id="merchant-tel" type="text" name="merchantTel" placeholder="请输入电话" v-validate:merchant-tel="{required:true,minlength:11,maxlength:11}" v-model="merchantTel"/>
+              <input id="merchantTel" type="text" name="merchantTel" placeholder="请输入电话" v-validate:merchantTel="{required:true,minlength:11,maxlength:11}" v-model="merchantTel"/>
             </div>
           </div>
 
@@ -168,21 +168,23 @@
                   });
                 }
                 else{
-                  alert("请正确填写")
+                  if (!this.$validation1.merchantname.valid) {alert("请正确填写商家名称且小于20字")}
+                  else if (!this.$validation1.merchanttel.valid) {alert("请正确填写商家电话")}
+                  else if (!this.$validation1.price.valid) {alert("团购价区间为10~100")}
+                  else if (!this.$validation1.message.valid) {alert("请选择商家类型")}
                 }
-              }   
-            },
+            }   
+          },
+        });
+          $.get("data.txt",function(data,status){
+            var jsData = eval ("(" + data + ")");
+            vm.message = jsData.merchantType;
+            vm.merchantName = jsData.merchantName;
+            vm.merchantTel = jsData.merchantTel;
+            vm.ifDiscount = jsData.ifDiscount;
+            vm.price = jsData.price;
           });
-
-                  $.get("data.txt",function(data,status){
-                    var jsData = eval ("(" + data + ")");
-                    vm.message = jsData.merchantType;
-                    vm.merchantName = jsData.merchantName;
-                    vm.merchantTel = jsData.merchantTel;
-                    vm.ifDiscount = jsData.ifDiscount;
-                    vm.price = jsData.price;
-                  });
-                });
-              </script>
-            </body>
-            </html>
+        });
+      </script>
+    </body>
+    </html>
