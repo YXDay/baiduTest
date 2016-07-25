@@ -8,7 +8,7 @@
 
   <!-- Bootstrap -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
-  <link href="css/flat/red.css" rel="stylesheet">
+  <link href="css/magic-check.css" rel="stylesheet">
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -49,6 +49,7 @@
         .page-sec-row-arrow{
           float: right !important;
           top: 18px;
+          margin-right: 10px;
           color: rgb(235,235,235);
         }
         .page-btn {
@@ -61,62 +62,62 @@
           width: 100%;
           margin: 0;
         }
-        .page-sec-row-tick {
-          display: none;
-          float: right !important;
-          top: 18px;
-          color: rgb(232,80,81);
+        .page-sec-row-container {
+          margin-top: 18px !important;
         }
       </style>
     </head>
     <body>
       <validator name="validation1">
-      <form novalidate>
-        <div class="page-row">
-          <div class="page-sec-row">
-            商家名称
-            <input id="merchant-name" type="text" name="merchant-name" placeholder="请输入名称" v-validate:merchant-name="{required:true,maxlength:20}"/>
-          </div>
-          <div class="page-sec-row">
-            商家电话
-            <input id="marchant-tel" type="text" name="merchant-tel" placeholder="请输入电话" v-validate:merchant-tel="{required:true,minlength:11,maxlength:11}"/>
-          </div>
-        </div>
-
-        <div class="page-row">
-          <div class="page-sec-row">
-            团购价&nbsp&nbsp&nbsp
-            <input id="price" type="text" name="merchant-name" placeholder="不可点击的" readonly="readonly" v-validate:price="{required:true,min:10,max:100}" value="99" />
-          </div>
-        </div>
-
-        <div class="page-row">
-          <div class="page-sec-row">
-            是否打折
-            <input type="checkbox" class="pull-right">
-          </div>
-          <div class="page-sec-row" data-toggle="modal" data-target="#myModal">
-            行业类型
-            <input type="text" name="merchant-tel" placeholder="请选择" readonly="readonly" v-model="message" v-validate:message="{required:true}"/>
-            <span class="page-sec-row-arrow pull-right glyphicon glyphicon-menu-right"></span>
-          </div>
-        </div>
-
-        <input class="btn btn-danger btn-lg btn-block page-btn" type="submit" value="提交" v-if="$validation1.valid">
-
-        <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-          <div id="test" class="page-row">
-            <div class="page-sec-row" data-dismiss="modal">
-              取消
+        <form novalidate v-on:submit.prevent="onSubmit">
+          <div class="page-row">
+            <div class="page-sec-row">
+              商家名称
+              <input id="merchant-name" type="text" name="merchantName" placeholder="请输入名称" v-validate:merchant-name="{required:true,maxlength:20}" v-model="merchantName"/>
             </div>
-            <div class="page-sec-row choose-list" v-for="item in items" v-on:click="choose" data-dismiss="modal">
-              {{ item.message }}
-              <span class="page-sec-row-tick pull-right glyphicon glyphicon-ok"></span>
+            <div class="page-sec-row">
+              商家电话
+              <input id="merchant-tel" type="text" name="merchantTel" placeholder="请输入电话" v-validate:merchant-tel="{required:true,minlength:11,maxlength:11}" v-model="merchantTel"/>
             </div>
           </div>
-        </div>
-      </form>
+
+          <div class="page-row">
+            <div class="page-sec-row">
+              团购价&nbsp&nbsp&nbsp
+              <input id="price" type="text" placeholder="不可点击的" readonly="readonly" v-validate:price="{required:true,min:10,max:100}" v-model="price" />
+            </div>
+          </div>
+
+          <div class="page-row">
+            <div class="page-sec-row">
+              是否打折 
+              <div class="pull-right page-sec-row-container">
+                <input id="c1" v-model="ifDiscount" type="checkbox" class="magic-checkbox" name="layout">
+                <label for="c1"></label>
+              </div>
+            </div>
+            <div class="page-sec-row" data-toggle="modal" data-target="#myModal">
+              行业类型
+              <input id="merchantType" type="text" placeholder="请选择" readonly="readonly" v-model="message" v-validate:message="{required:true}"/>
+              <span class="page-sec-row-arrow pull-right glyphicon glyphicon-menu-right"></span>
+            </div>
+          </div>
+
+          <input class="btn btn-danger btn-lg btn-block page-btn" type="submit" value="提交" >
+
+          <!-- Modal -->
+          <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div id="test" class="page-row">
+              <div class="page-sec-row" data-dismiss="modal">
+                取消
+              </div>
+              <div class="page-sec-row choose-list" v-for="item in items" v-on:click="choose" data-dismiss="modal">
+                {{ item.message }}
+                <span class="page-sec-row-tick pull-right glyphicon glyphicon-ok"></span>
+              </div>
+            </div>
+          </div>
+        </form>
       </validator>
 
       <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -124,48 +125,64 @@
       <!-- Include all compiled plugins (below), or include individual files as needed -->
       <script src="js/bootstrap.min.js"></script>
       <script src="js/vue.js"></script>
-      <script src="js/icheck.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/vue.validator/2.1.5/vue-validator.min.js"></script>
+      <script src="//cdn.jsdelivr.net/vue.validator/2.1.5/vue-validator.min.js"></script>
 
       <script>
         $(document).ready(function(){
-          var checkbox = $("input[type='checkbox']");
-          $('input').iCheck({
-            checkboxClass: 'icheckbox_flat-red',
-          });
-          $("ins.iCheck-helper").click(function(){
-            alert(666)
-            if (checkbox.attr("checked") == "checked"){checkbox.attr("checked","")}
-            else{checkbox.attr("checked","checked")}
-              alert(666)
-          });
-
-          new Vue({
+          var vm = new Vue({
             el:"body",
             data: {
               items: [
-                {message : "餐饮"},
-                {message : "美甲"},
-                {message : "旅游"},
-                {message : "快递"},
-                {message : "亲子"},
+              {message : "餐饮"},
+              {message : "美甲"},
+              {message : "旅游"},
+              {message : "快递"},
+              {message : "亲子"},
               ],
-              message: ""
+              message:"",
+              merchantName:"",
+              merchantTel:"",
+              ifDiscount:false,
+              price:"",
             },
             methods: {
               choose: function(event) {
-                  $(".choose-list").each(function(){
-                    $(this).css("color","#333")
-                    $(this).children("span").hide();
+                $(".choose-list").each(function(){
+                  $(this).css("color","#333")
+                  $(this).children("span").hide();
+                });
+                var e = event.target;
+                this.message = e.childNodes[1].nodeValue;
+                e.style.color = "red";
+                e.childNodes[3].style.display = "inline-block";
+              }, 
+              onSubmit: function(){
+                if (this.$validation1.valid) {
+                  $.post("handler.php",
+                  {
+                    message:this.message,
+                    merchantName:this.merchantName,
+                    merchantTel:this.merchantTel,
+                    ifDiscount:this.ifDiscount,
+                    price:this.price
                   });
-                  var e = event.target;
-                  this.message = e.childNodes[1].nodeValue;
-                  e.style.color = "red";
-                  e.childNodes[3].style.display = "inline-block";
-              }
-            }
-          })
-        });
-      </script>
-    </body>
-    </html>
+                }
+                else{
+                  alert("请正确填写")
+                }
+              }   
+            },
+          });
+
+                  $.get("data.txt",function(data,status){
+                    var jsData = eval ("(" + data + ")");
+                    vm.message = jsData.merchantType;
+                    vm.merchantName = jsData.merchantName;
+                    vm.merchantTel = jsData.merchantTel;
+                    vm.ifDiscount = jsData.ifDiscount;
+                    vm.price = jsData.price;
+                  });
+                });
+              </script>
+            </body>
+            </html>
